@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+    <style>
+      #card {
+        width: 15%;
+        border: 1px solid black;
+        height: 10%;
+        margin: 10px;
+      }
+      #card-1 {
+        width: 15%;
+        border: 1px solid black;
+        height: 10%;
+        margin: 10px;
+        color: green;
+        text-decoration: line-through;
+      }
+      #del {
+        background-color: red;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="form">
+      <input type="text" placeholder="title" id="title" />
+      <input type="checkbox" id="checkbox" />
+      <input type="submit" value="submit" />
+    </form>
+    <div id="container"></div>
+  </body>
+</html>
+<script>
+  document.getElementById("form").addEventListener("submit", submit_func);
+  const cart = JSON.parse(localStorage.getItem("cart"));
+  console.log("f", cart);
+  cart.map((c) => {
+    var a = document.createElement("div");
+    a.textContent = c.title;
+    var b = document.createElement("input");
+    b.setAttribute("type", "checkbox");
+    b.setAttribute("id", "checkbox");
+    a.setAttribute("id", "card");
+    b.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        a.setAttribute("id", "card-1");
+      } else {
+        a.setAttribute("id", "card");
+      }
+    });
+    var d = document.createElement("button");
+    d.innerHTML = "delete";
+    d.setAttribute("id", "del");
+    a.append(b, d);
+    d.addEventListener("click", (e) => {
+      var index = cart.indexOf(c);
+      cart.splice(index, 1);
+      console.log(e.target.parentNode);
+      e.target.parentNode.remove();
+      localStorage.setItem("cart", JSON.stringify(cart));
+    });
+    document.getElementById("container").append(a);
+  });
+  function submit_func(event) {
+    event.preventDefault();
+    var obj = {
+      id: Math.floor(Math.random() * 100),
+      title: event.target.title.value,
+    };
+    console.log(obj);
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (cart === null) {
+      localStorage.setItem("cart", []);
+    } else {
+      cart.push(obj);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+    console.log(cart);
+  }
+</script>
